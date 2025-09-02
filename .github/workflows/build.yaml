@@ -1,0 +1,73 @@
+name: Build & Commit Message Lint
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+      - dev
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+
+# Avoid concurrent runs for the same ref
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build Next.js & Check commit messages
+    runs-on: ubuntu-latest
+    environment: Preview
+    env:
+      GH_PKG_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      NODE_OPTIONS: --max-old-space-size=4096
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.12.1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+
+      - name: Next.js Cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/.next/cache
+          key: nextjs-cache-${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}-src-${{ hashFiles('**/*.[jt]s?(x)') }}
+          restore-keys: |
+            nextjs-cache-${{ runner.os }}-pnpm-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm exec eslint .
+
+      - name: Build
+        run: pnpm build
+
+      # commitlint - validate last commit
+      - name: Validate last commit with commitlint
+        if: github.event_name == 'push' && github.actor != 'dependabot[bot]'
+        run: pnpm exec commitlint --from HEAD~1 --to HEAD --verbose
+
+      # commitlint - validate all commits in PR
+      - name: Validate PR commits with commitlint
+        if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
+        run: pnpm exec commitlint --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
+
+      # commitlint - validate PR title
+      - name: Validate PR title with commitlint
+        if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
+        run: echo "${{ github.event.pull_request.title }}" | pnpm exec commitlint --verbose
