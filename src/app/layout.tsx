@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import type { PropsWithChildren } from "react";
 import { NextIntlClientProvider } from "next-intl";
-import { Inter } from "next/font/google";
+import { DM_Sans, Inter } from "next/font/google";
 
 import seoConfig from "@/constants/seo-config";
 import { cn } from "@/lib/utils";
@@ -10,6 +10,12 @@ import "../styles/global.css";
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
+});
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-dm-sans",
 });
 
 export const metadata: Metadata = {
@@ -31,7 +37,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en">
-      <body className={cn(inter.variable, "antialiased")}>
+      <body className={cn(inter.variable, dmSans.variable, "antialiased")}>
         <NextIntlClientProvider>
           {children}
         </NextIntlClientProvider>
