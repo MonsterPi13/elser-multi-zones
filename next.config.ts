@@ -1,3 +1,4 @@
+/* eslint-disable node/prefer-global/process */
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
@@ -6,23 +7,47 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/:locale/comic/:path*",
-        // eslint-disable-next-line node/prefer-global/process
         destination: `${process.env.COMIC_URL}/:path*`,
       },
       {
         source: "/:locale/comic",
-        // eslint-disable-next-line node/prefer-global/process
         destination: `${process.env.COMIC_URL}/`,
       },
       {
+        source: "/comic/:path*",
+        destination: `${process.env.COMIC_URL}/:path*`,
+      },
+      {
         source: "/:locale/pgc/:path*",
-        // eslint-disable-next-line node/prefer-global/process
-        destination: `${process.env.PGC_URL}/:path*`,
+        destination: `${process.env.PGC_URL}/pgc/:locale/:path*`,
       },
       {
         source: "/:locale/pgc",
-        // eslint-disable-next-line node/prefer-global/process
-        destination: `${process.env.PGC_URL}/`,
+        destination: `${process.env.PGC_URL}/pgc/:locale`,
+      },
+      {
+        source: "/pgc/:path*",
+        destination: `${process.env.PGC_URL}/pgc/:path*`,
+      },
+      {
+        source: "/pgc",
+        destination: `${process.env.PGC_URL}/pgc`,
+      },
+      {
+        source: "/:locale/anime/:path*",
+        destination: `${process.env.ANIME_URL}/anime/:locale/:path*`,
+      },
+      {
+        source: "/:locale/anime",
+        destination: `${process.env.ANIME_URL}/anime/:locale`,
+      },
+      {
+        source: "/anime/:path*",
+        destination: `${process.env.ANIME_URL}/anime/:path*`,
+      },
+      {
+        source: "/anime",
+        destination: `${process.env.ANIME_URL}/anime`,
       },
     ];
   },
