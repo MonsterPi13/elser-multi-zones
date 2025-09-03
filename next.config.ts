@@ -10,45 +10,25 @@ const nextConfig: NextConfig = {
         destination: `${process.env.COMIC_URL}/:path*`,
       },
       {
-        source: "/:locale/comic",
-        destination: `${process.env.COMIC_URL}/`,
-      },
-      {
-        source: "/comic/:path*",
-        destination: `${process.env.COMIC_URL}/:path*`,
-      },
-      {
         source: "/:locale/pgc/:path*",
         destination: `${process.env.PGC_URL}/pgc/:locale/:path*`,
-      },
-      {
-        source: "/:locale/pgc",
-        destination: `${process.env.PGC_URL}/pgc/:locale`,
-      },
-      {
-        source: "/pgc/:path*",
-        destination: `${process.env.PGC_URL}/pgc/:path*`,
-      },
-      {
-        source: "/pgc",
-        destination: `${process.env.PGC_URL}/pgc`,
       },
       {
         source: "/:locale/anime/:path*",
         destination: `${process.env.ANIME_URL}/anime/:locale/:path*`,
       },
-      {
-        source: "/:locale/anime",
-        destination: `${process.env.ANIME_URL}/anime/:locale`,
-      },
-      {
-        source: "/anime/:path*",
-        destination: `${process.env.ANIME_URL}/anime/:path*`,
-      },
-      {
-        source: "/anime",
-        destination: `${process.env.ANIME_URL}/anime`,
-      },
+      // {
+      //   source: "/:locale/anime",
+      //   destination: `${process.env.ANIME_URL}/anime/:locale`,
+      // },
+      // {
+      //   source: "/anime/:path*",
+      //   destination: `${process.env.ANIME_URL}/anime/:path*`,
+      // },
+      // {
+      //   source: "/anime",
+      //   destination: `${process.env.ANIME_URL}/anime`,
+      // },
     ];
   },
 };
